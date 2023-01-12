@@ -44,7 +44,7 @@ v1.0.0 相对于 v0.8.2 有以下不兼容的变更：
 
 * [SQLite](https://sqlite.org)
   - [github.com/mattn/go-sqlite3](https://github.com/mattn/go-sqlite3)
-  - [modernc.org/sqlite](https://gitlab.com/cznic/sqlite) (Windows试验性支持)
+  - [modernc.org/sqlite](https://gitlab.com/cznic/sqlite)
 
 * MsSql
   - [github.com/denisenkom/go-mssqldb](https://github.com/denisenkom/go-mssqldb)
