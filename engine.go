@@ -62,17 +62,19 @@ func NewEngine(driverName string, dataSourceName string) (*Engine, error) {
 		return nil, err
 	}
 
-	return newEngine(driverName, dataSourceName, dialect, db)
+	driver := dialects.QueryDriver(driverName)
+	return NewEngineWithDriverDialectAndDB(driverName, driver, dataSourceName, dialect, db)
 }
 
-func newEngine(driverName, dataSourceName string, dialect dialects.Dialect, db *core.DB) (*Engine, error) {
+// NewEngineWithDriverDialectAndDB constructs a new engine with the given driver, dialect, and db.
+func NewEngineWithDriverDialectAndDB(driverName string, driver dialects.Driver, dataSourceName string, dialect dialects.Dialect, db *core.DB) (*Engine, error) {
 	cacherMgr := caches.NewManager()
 	mapper := names.NewCacheMapper(new(names.SnakeMapper))
 	tagParser := tags.NewParser("xorm", dialect, mapper, mapper, cacherMgr)
 
 	engine := &Engine{
 		dialect:        dialect,
-		driver:         dialects.QueryDriver(driverName),
+		driver:         driver,
 		TZLocation:     time.Local,
 		defaultContext: context.Background(),
 		cacherMgr:      cacherMgr,
@@ -113,7 +115,8 @@ func NewEngineWithDB(driverName string, dataSourceName string, db *core.DB) (*En
 	if err != nil {
 		return nil, err
 	}
-	return newEngine(driverName, dataSourceName, dialect, db)
+	driver := dialects.QueryDriver(driverName)
+	return NewEngineWithDriverDialectAndDB(driverName, driver, dataSourceName, dialect, db)
 }
 
 // NewEngineWithDialectAndDB new a db manager according to the parameter.
@@ -121,7 +124,8 @@ func NewEngineWithDB(driverName string, dataSourceName string, db *core.DB) (*En
 // For creating dialect, you can call dialects.OpenDialect. And, for creating db,
 // you can call core.Open or core.FromDB.
 func NewEngineWithDialectAndDB(driverName, dataSourceName string, dialect dialects.Dialect, db *core.DB) (*Engine, error) {
-	return newEngine(driverName, dataSourceName, dialect, db)
+	driver := dialects.QueryDriver(driverName)
+	return NewEngineWithDriverDialectAndDB(driverName, driver, dataSourceName, dialect, db)
 }
 
 // EnableSessionID if enable session id
